@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS permission (
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT
+);

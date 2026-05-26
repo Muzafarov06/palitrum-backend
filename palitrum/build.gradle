@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.7'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Palitrum Spring Boot Application'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// 🌐 Веб и REST
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// 💾 JPA + Hibernate
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// 🔐 Spring Security (включая AuthenticationManager и фильтры)
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// ⚙️ Валидация (Bean Validation / Jakarta Validation)
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 🗃 PostgreSQL драйвер
+	runtimeOnly 'org.postgresql:postgresql'
+
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// 🧬 Flyway — миграции базы данных
+	implementation 'org.flywaydb:flyway-core:11.10.2'
+	implementation 'org.flywaydb:flyway-database-postgresql:11.10.2'
+
+	// ⚙️ AWS SDK S3 для Yandex Object Storage
+	implementation 'software.amazon.awssdk:s3:2.20.0'
+
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
+	// 🧰 Lombok — убираем бойлерплейт (геттеры/сеттеры/конструкторы)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// ⚙️ DevTools — горячая перезагрузка при разработке
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// 🧪 Тестирование
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// 🔑 JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // для работы с JSON
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
