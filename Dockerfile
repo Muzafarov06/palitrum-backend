@@ -1,6 +1,9 @@
 FROM gradle:8.13-jdk21 AS build
 WORKDIR /app
-COPY . .
+
+# Копируем только папку с проектом (где лежит build.gradle)
+COPY palitrum /app
+
 RUN gradle build -x test --no-daemon
 
 FROM eclipse-temurin:21-jre-alpine
