@@ -35,7 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
-application.properties
 
 *.env
 *.key
