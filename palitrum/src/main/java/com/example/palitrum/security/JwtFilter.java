@@ -26,6 +26,27 @@ public class JwtFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
     private final UserRepository userRepository;
 
+    /**
+     * Определяет, нужно ли пропускать фильтр для данного запроса.
+     * Возвращает true для публичных эндпоинтов, которые не требуют проверки токена.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+
+        // Список публичных путей, которые не требуют проверки токена
+        return path.startsWith("/auth/login") ||
+                path.startsWith("/api/programs/public") ||
+                path.startsWith("/api/rooms") ||
+                path.startsWith("/api/news") ||
+                path.startsWith("/api/settings/public") ||
+                path.startsWith("/api/files/") ||
+                path.equals("/") ||
+                path.startsWith("/index.html") ||
+                path.startsWith("/static/") ||
+                path.startsWith("/favicon.ico");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

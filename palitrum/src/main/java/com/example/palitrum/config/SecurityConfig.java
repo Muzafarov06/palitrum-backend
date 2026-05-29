@@ -51,7 +51,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
@@ -61,43 +60,25 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/applications").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/applications/create-with-files").permitAll()
 
-                        // ================= ПУБЛИЧНЫЕ GET ЭНДПОИНТЫ =================
-                        // Новости
+                        // Публичные GET эндпоинты
                         .requestMatchers(HttpMethod.GET, "/api/news").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/news/**").permitAll()
-
-                        // Программы
                         .requestMatchers(HttpMethod.GET, "/api/programs/public").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/programs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/programs/**").permitAll()
-
-                        // Помещения (комнаты)
                         .requestMatchers(HttpMethod.GET, "/api/rooms/filter").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/rooms").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/rooms/**").permitAll()
-
-                        // Преподаватели
                         .requestMatchers(HttpMethod.GET, "/api/teachers").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/teachers/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/dropdown/teachers").permitAll()
-
-                        // Настройки
                         .requestMatchers(HttpMethod.GET, "/api/settings/public").permitAll()
-
-                        // Заявки (только чтение)
                         .requestMatchers(HttpMethod.GET, "/api/applications").permitAll()
-
-                        // Отделения
                         .requestMatchers(HttpMethod.GET, "/api/departments").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/departments/**").permitAll()
-
-                        // Файлы
                         .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
-
-                        // Статические ресурсы
                         .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico").permitAll()
 
-                        // Всё остальное требует аутентификации
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -117,13 +98,5 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    private AuthenticationEntryPoint restAuthenticationEntryPoint() {
-        return (request, response, authException) -> {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().println("{ \"error\": \"Unauthorized\" }");
-        };
     }
 }

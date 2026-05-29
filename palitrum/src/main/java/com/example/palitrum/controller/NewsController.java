@@ -32,7 +32,7 @@ public class NewsController {
         this.newsService = newsService;
     }
 
-    // ✅ ПУБЛИЧНЫЙ доступ для получения списка новостей
+    // ✅ ПУБЛИЧНЫЙ доступ для получения списка новостей (главная страница)
     @GetMapping
     public ResponseEntity<Page<NewsResponse>> getFilteredNews(
             @RequestParam(required = false) String search,
@@ -55,8 +55,9 @@ public class NewsController {
         return ResponseEntity.ok(newsService.getNewsById(id));
     }
 
+    // Админский эндпоинт статистики — доступ только для ролей ADMIN и MANAGER
     @GetMapping("/statistics")
-    @PreAuthorize("hasAuthority('news.view')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<Map<String, Long>> getStatistics(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Boolean isPublic,
@@ -67,20 +68,23 @@ public class NewsController {
         return ResponseEntity.ok(newsService.getStatistics(search, isPublic, pinned, authorId, startDate, endDate));
     }
 
+    // Создание новости — доступ для ADMIN и MANAGER
     @PostMapping
-    @PreAuthorize("hasAuthority('news.create')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<NewsResponse> createNews(@Valid @RequestBody NewsDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.createNews(dto));
     }
 
+    // Обновление новости — доступ для ADMIN и MANAGER
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('news.update')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<NewsResponse> updateNews(@PathVariable Long id, @Valid @RequestBody NewsDTO dto) {
         return ResponseEntity.ok(newsService.updateNews(id, dto));
     }
 
+    // Удаление новости — доступ только для ADMIN (более строго)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('news.delete')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteNews(@PathVariable Long id) {
         newsService.deleteNews(id);
         return ResponseEntity.noContent().build();
